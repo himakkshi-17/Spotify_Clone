@@ -60,17 +60,27 @@ function formatDuration(duration) {
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 }
 
-function getDuration(src, cb) {
-    var audio = new Audio('src');
-    audio.addEventListener('loadedmetadata', function() {
-        // Metadata is now available
-        console.log('Metadata loaded!');
-        console.log('Duration:', audio.duration);
-        let songDuration = formatDuration(audio.duration);
-        console.log(songDuration);
-        return songDuration;
+// function getDuration(src, cb) {
+//     console.log(src)
+//     var audio = new Audio('src');
+//     audio.addEventListener('loadedmetadata', function() {
+//         // Metadata is now available
+//         console.log('Metadata loaded!');
+//         console.log('Duration:', audio.duration);
+//         let songDuration = formatDuration(audio.duration);
+//         console.log(songDuration);
+//         return songDuration;
+//       });
+// }
+function getDuration(src) {
+    return new Promise((resolve) => {
+      const audio = new Audio(src);
+      audio.addEventListener('loadedmetadata', function () {
+        const duration = audio.duration;
+        resolve(duration);
       });
-}
+    });
+  }
 
 songItems.forEach((element, i)=>{
 
@@ -78,9 +88,14 @@ songItems.forEach((element, i)=>{
 
     element.getElementsByClassName ("songName")[0].innerText = songs[i].songName;
     let src = songs[i].filePath;
-    element.getElementsByClassName("timestamp")[0].innerText = getDuration(src,i);
+    
+    // element.getElementsByClassName("timestamp")[0].innerText = getDuration(src,i);
+    getDuration(src).then((duration) => {
+        element.getElementsByClassName("timestamp")[0].innerText = formatDuration(duration);
+      });
 
 })
+
 
 
 
