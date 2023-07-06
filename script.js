@@ -61,6 +61,7 @@ function formatDuration(duration) {
 }
 
 function getDuration(src, cb) {
+    console.log(src);
     var audio = new Audio('src');
     audio.addEventListener('loadedmetadata', function() {
         // Metadata is now available
